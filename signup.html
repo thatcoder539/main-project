@@ -1,1 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <style>
+    :root {
+      --primary: #0070f3;
+      --primary-light: #3291ff;
+      --primary-dark: #0050b3;
+      --background: #ffffff;
+      --foreground: #000000;
+      --card: #ffffff;
+      --card-foreground: #000000;
+      --border: #e2e8f0;
+      --input: #e2e8f0;
+      --ring: #0070f3;
+      --muted: #64748b;
+      --muted-foreground: #64748b;
+      --error: #ef4444;
+      --success: #10b981;
+    }
 
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --background: #0f172a;
+        --foreground: #f8fafc;
+        --card: #1e293b;
+        --card-foreground: #f8fafc;
+        --border: #334155;
+        --input: #334155;
+        --muted: #94a3b8;
+        --muted-foreground: #94a3b8;
+      }
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      background: linear-gradient(to bottom right, #f8fafc, #e2e8f0);
+      color: var(--foreground);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      body {
+        background: linear-gradient(to bottom right, #0f172a, #1e293b);
+      }
+    }
+
+    .container {
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .card {
+      background-color: var(--card);
+      color: var(--card-foreground);
+      border-radius: 0.75rem;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .card {
+        background-color: rgba(30, 41, 59, 0.5);
+      }
+    }
+
+    .card-header {
+      padding: 1.5rem 1.5rem 1rem 1.5rem;
+      text-align: center;
+    }
+
+    .logo-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 1rem;
+    }
+
+    .logo {
+      width: 48px;
+      height: 48px;
+      background-color: rgba(0, 112, 243, 0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+    }
+
+    .card-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .card-description {
+      color: var(--muted-foreground);
+      font-size: 0.875rem;
+      margin-bottom: 1rem;
+    }
+
+    .card-content {
+      padding: 0 1.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group-flex {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+
+    .input-wrapper {
+      position: relative;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.875rem;
+      border: 1px solid var(--input);
+      border-radius: 0.375rem;
+      background-color: transparent;
+      color: var(--foreground);
+      transition: border-color 0.2s, box-shadow 0.2s;
+      font-family: inherit;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--ring);
+      box-shadow: 0 0 0 2px rgba(0, 112, 243, 0.25);
+    }
+
+    input.error {
+      border-color: var(--error);
+    }
+
+    input.error:focus {
+      box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.25);
+    }
+
+    .password-input {
+      padding-right: 2.5rem;
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 0;
+      top: 0;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      padding: 0 0.75rem;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      color: var(--muted-foreground);
+    }
+
+    .error-message {
+      color: var(--error);
+      font-size: 0.75rem;
+      margin-top: 0.25rem;
+      display: none;
+    }
+
+    .error-message.visible {
+      display: block;
+    }
+
+    .password-strength {
+      margin-top: 0.5rem;
+      height: 4px;
+      background-color: var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .password-strength-bar {
+      height: 100%;
+      width: 0;
+      transition: width 0.3s, background-color 0.3s;
+    }
+
+    .password-strength-text {
+      font-size: 0.75rem;
+      margin-top: 0.25rem;
+      color: var(--muted-foreground);
+    }
+
+    .card-footer {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 0.375rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+      height: 2.5rem;
+      border: none;
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-dark);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    .btn-outline {
+      background-color: transparent;
+      border: 1px solid var(--border);
+      color: var(--foreground);
+    }
+
+    .btn-outline:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .btn-outline:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+    }
+
+    .btn-link {
+      background: none;
+      border: none;
+      color: var(--primary);
+      padding: 0;
+      font-size: 0.875rem;
+      height: auto;
+      text-decoration: none;
+    }
+
+    .btn-link:hover {
+      text-decoration: underline;
+    }
+
+    .icon {
+      width: 1rem;
+      height: 1rem;
+      margin-right: 0.5rem;
+    }
+
+    .spinner {
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .success-container {
+      display: none;
+      text-align: center;
+      padding: 2rem 1.5rem;
+    }
+
+    .success-icon {
+      width: 48px;
+      height: 48px;
+      background-color: rgba(16, 185, 129, 0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--success);
+      margin: 0 auto 1rem auto;
+    }
+
+    .success-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .success-message {
+      color: var(--muted-foreground);
+      font-size: 0.875rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .login-text {
+      text-align: center;
+      font-size: 0.875rem;
+      color: var(--muted-foreground);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <div id="signup-form-container">
+        <div class="card-header">
+          <div class="logo-container">
+            <div class="logo">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+            </div>
+          </div>
+          <h1 class="card-title">Create an account</h1>
+          <p class="card-description">Enter your details to sign up for a new account</p>
+        </div>
+
+        <form id="signup-form">
+          <div class="card-content">
+            <div class="form-group">
+              <label for="username">Username</label>
+              <input type="text" id="username" placeholder="Enter your username">
+              <p id="username-error" class="error-message">Please enter a valid username</p>
+            </div>
+
+            <div class="form-group">
+              <label for="password">Password</label>
+              <div class="input-wrapper">
+                <input type="password" id="password" class="password-input" placeholder="Create a password">
+                <button type="button" class="toggle-password" aria-label="Toggle password visibility">
+                  <svg id="eye-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: block;">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                  <svg id="eye-off-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                    <line x1="1" y1="1" x2="23" y2="23"></line>
+                  </svg>
+                </button>
+              </div>
+              <div class="password-strength">
+                <div id="password-strength-bar" class="password-strength-bar"></div>
+              </div>
+              <p id="password-strength-text" class="password-strength-text">Password strength: Too weak</p>
+              <p id="password-error" class="error-message">Password must be at least 8 characters</p>
+            </div>
+
+            <div class="form-group">
+              <label for="confirm-password">Confirm Password</label>
+              <div class="input-wrapper">
+                <input type="password" id="confirm-password" class="password-input" placeholder="Confirm your password">
+                <button type="button" class="toggle-password" aria-label="Toggle password visibility">
+                  <svg id="confirm-eye-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: block;">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                  <svg id="confirm-eye-off-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                    <line x1="1" y1="1" x2="23" y2="23"></line>
+                  </svg>
+                </button>
+              </div>
+              <p id="confirm-password-error" class="error-message">Passwords do not match</p>
+            </div>
+          </div>
+
+          <div class="card-footer">
+            <button type="submit" id="submit-btn" class="btn btn-primary">Create Account</button>
+            <p class="login-text">
+              Already have an account?
+              <a href="#" class="btn-link">Sign in</a>
+            </p>
+          </div>
+        </form>
+      </div>
+
+      <div id="success-container" class="success-container">
+        <div class="success-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+          </svg>
+        </div>
+        <h2 class="success-title">Account Created!</h2>
+        <p class="success-message">Your account has been successfully created. You can now sign in with your credentials.</p>
+        <button type="button" class="btn btn-primary">Go to Login</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Form elements
+    const signupForm = document.getElementById('signup-form');
+    const signupFormContainer = document.getElementById('signup-form-container');
+    const successContainer = document.getElementById('success-container');
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
+    const confirmPasswordInput = document.getElementById('confirm-password');
+    const usernameError = document.getElementById('username-error');
+    const passwordError = document.getElementById('password-error');
+    const confirmPasswordError = document.getElementById('confirm-password-error');
+    const submitBtn = document.getElementById('submit-btn');
+    const passwordStrengthBar = document.getElementById('password-strength-bar');
+    const passwordStrengthText = document.getElementById('password-strength-text');
+    
+    // Password visibility toggle
+    const togglePasswordBtns = document.querySelectorAll('.toggle-password');
+    const eyeIcon = document.getElementById('eye-icon');
+    const eyeOffIcon = document.getElementById('eye-off-icon');
+    const confirmEyeIcon = document.getElementById('confirm-eye-icon');
+    const confirmEyeOffIcon = document.getElementById('confirm-eye-off-icon');
+    
+    togglePasswordBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const input = btn.previousElementSibling;
+        const isPassword = input.id === 'password';
+        const showIcon = isPassword ? eyeIcon : confirmEyeIcon;
+        const hideIcon = isPassword ? eyeOffIcon : confirmEyeOffIcon;
+        
+        if (input.type === 'password') {
+          input.type = 'text';
+          showIcon.style.display = 'none';
+          hideIcon.style.display = 'block';
+        } else {
+          input.type = 'password';
+          showIcon.style.display = 'block';
+          hideIcon.style.display = 'none';
+        }
+      });
+    });
+    
+    // Validation functions
+    const validateUsername = (username) => {
+      if (!username.trim()) {
+        usernameError.textContent = 'Username is required';
+        usernameError.classList.add('visible');
+        usernameInput.classList.add('error');
+        return false;
+      } else if (username.trim().length < 3) {
+        usernameError.textContent = 'Username must be at least 3 characters';
+        usernameError.classList.add('visible');
+        usernameInput.classList.add('error');
+        return false;
+      }
+      usernameError.classList.remove('visible');
+      usernameInput.classList.remove('error');
+      return true;
+    };
+    
+    const validatePassword = (password) => {
+      if (!password) {
+        passwordError.textContent = 'Password is required';
+        passwordError.classList.add('visible');
+        passwordInput.classList.add('error');
+        return false;
+      } else if (password.length < 8) {
+        passwordError.textContent = 'Password must be at least 8 characters';
+        passwordError.classList.add('visible');
+        passwordInput.classList.add('error');
+        return false;
+      }
+      passwordError.classList.remove('visible');
+      passwordInput.classList.remove('error');
+      return true;
+    };
+    
+    const validateConfirmPassword = (password, confirmPassword) => {
+      if (!confirmPassword) {
+        confirmPasswordError.textContent = 'Please confirm your password';
+        confirmPasswordError.classList.add('visible');
+        confirmPasswordInput.classList.add('error');
+        return false;
+      } else if (password !== confirmPassword) {
+        confirmPasswordError.textContent = 'Passwords do not match';
+        confirmPasswordError.classList.add('visible');
+        confirmPasswordInput.classList.add('error');
+        return false;
+      }
+      confirmPasswordError.classList.remove('visible');
+      confirmPasswordInput.classList.remove('error');
+      return true;
+    };
+    
+    // Password strength checker
+    const checkPasswordStrength = (password) => {
+      if (!password) {
+        passwordStrengthBar.style.width = '0%';
+        passwordStrengthBar.style.backgroundColor = '#e2e8f0';
+        passwordStrengthText.textContent = 'Password strength: Too weak';
+        return;
+      }
+      
+      let strength = 0;
+      
+      // Length check
+      if (password.length >= 8) strength += 1;
+      if (password.length >= 12) strength += 1;
+      
+      // Character variety checks
+      if (/[A-Z]/.test(password)) strength += 1;
+      if (/[a-z]/.test(password)) strength += 1;
+      if (/[0-9]/.test(password)) strength += 1;
+      if (/[^A-Za-z0-9]/.test(password)) strength += 1;
+      
+      // Update UI based on strength
+      let percentage, color, text;
+      
+      switch (true) {
+        case (strength <= 2):
+          percentage = '20%';
+          color = '#ef4444'; // red
+          text = 'Too weak';
+          break;
+        case (strength <= 4):
+          percentage = '50%';
+          color = '#f59e0b'; // amber
+          text = 'Medium';
+          break;
+        case (strength <= 6):
+          percentage = '80%';
+          color = '#10b981'; // green
+          text = 'Strong';
+          break;
+        default:
+          percentage = '100%';
+          color = '#10b981'; // green
+          text = 'Very strong';
+      }
+      
+      passwordStrengthBar.style.width = percentage;
+      passwordStrengthBar.style.backgroundColor = color;
+      passwordStrengthText.textContent = `Password strength: ${text}`;
+    };
+    
+    // Input event listeners
+    usernameInput.addEventListener('blur', () => {
+      validateUsername(usernameInput.value);
+    });
+    
+    passwordInput.addEventListener('input', () => {
+      checkPasswordStrength(passwordInput.value);
+    });
+    
+    passwordInput.addEventListener('blur', () => {
+      validatePassword(passwordInput.value);
+      if (confirmPasswordInput.value) {
+        validateConfirmPassword(passwordInput.value, confirmPasswordInput.value);
+      }
+    });
+    
+    confirmPasswordInput.addEventListener('blur', () => {
+      validateConfirmPassword(passwordInput.value, confirmPasswordInput.value);
+    });
+    
+    // Form submission
+    signupForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const username = usernameInput.value;
+      const password = passwordInput.value;
+      const confirmPassword = confirmPasswordInput.value;
+      
+      const isUsernameValid = validateUsername(username);
+      const isPasswordValid = validatePassword(password);
+      const isConfirmPasswordValid = validateConfirmPassword(password, confirmPassword);
+      
+      if (!isUsernameValid || !isPasswordValid || !isConfirmPasswordValid) {
+        return;
+      }
+      
+      // Show loading state
+      const originalText = submitBtn.textContent;
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = `
+        <svg class="icon spinner" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
+        </svg>
+        Creating Account...
+      `;
+      
+      // Simulate account creation
+      setTimeout(() => {
+        // Show success message
+        signupFormContainer.style.display = 'none';
+        successContainer.style.display = 'block';
+        
+        // In a real app, you would send the form data to your server here
+        console.log('Account created with:', { username, password });
+      }, 1500);
+    });
+  </script>
+</body>
+</html>
