@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Encryption 2025</title></title>
+  <title>SecureMessage - Encrypt and Decrypt Messages</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
   <style>
     :root {
@@ -20,6 +20,7 @@
       --muted: #64748b;
       --muted-foreground: #64748b;
       --error: #ef4444;
+      --success: #10b981;
     }
 
     @media (prefers-color-scheme: dark) {
@@ -46,10 +47,6 @@
       background: linear-gradient(to bottom right, #f8fafc, #e2e8f0);
       color: var(--foreground);
       min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 1rem;
     }
 
     @media (prefers-color-scheme: dark) {
@@ -60,225 +57,63 @@
 
     .container {
       width: 100%;
-      max-width: 400px;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
     }
 
-    .card {
-      background-color: var(--card);
-      color: var(--card-foreground);
-      border-radius: 0.75rem;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-      overflow: hidden;
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    @media (prefers-color-scheme: dark) {
-      .card {
-        background-color: rgba(30, 41, 59, 0.5);
-      }
-    }
-
-    .card-header {
-      padding: 1.5rem 1.5rem 0 1.5rem;
-      text-align: center;
-    }
-
-    .logo-container {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 1rem;
-    }
-
-    .logo {
-      width: 48px;
-      height: 48px;
-      background-color: rgba(0, 112, 243, 0.1);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--primary);
-    }
-
-    .card-title {
-      font-size: 1.5rem;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-    }
-
-    .card-description {
-      color: var(--muted-foreground);
-      font-size: 0.875rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .tabs {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0.5rem;
-      margin: 0 1.5rem 1.5rem 1.5rem;
-    }
-
-    .tab {
-      background-color: transparent;
-      border: none;
-      padding: 0.5rem;
-      font-size: 0.875rem;
-      font-weight: 500;
-      border-radius: 0.25rem;
-      cursor: pointer;
-      color: var(--muted-foreground);
-    }
-
-    .tab.active {
-      background-color: var(--primary);
-      color: white;
-    }
-
-    .tab-content {
-      display: none;
-    }
-
-    .tab-content.active {
-      display: block;
-    }
-
-    .card-content {
-      padding: 0 1.5rem;
-    }
-
-    .form-group {
-      margin-bottom: 1rem;
-    }
-
-    .form-group-flex {
+    .header {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      padding: 1.5rem 0;
+      border-bottom: 1px solid var(--border);
     }
 
-    label {
-      display: block;
-      font-size: 0.875rem;
-      font-weight: 500;
-      margin-bottom: 0.5rem;
-    }
-
-    .input-wrapper {
-      position: relative;
-    }
-
-    input {
-      width: 100%;
-      padding: 0.5rem 0.75rem;
-      font-size: 0.875rem;
-      border: 1px solid var(--input);
-      border-radius: 0.375rem;
-      background-color: transparent;
-      color: var(--foreground);
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-
-    input:focus {
-      outline: none;
-      border-color: var(--ring);
-      box-shadow: 0 0 0 2px rgba(0, 112, 243, 0.25);
-    }
-
-    input.error {
-      border-color: var(--error);
-    }
-
-    input.error:focus {
-      box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.25);
-    }
-
-    .password-input {
-      padding-right: 2.5rem;
-    }
-
-    .toggle-password {
-      position: absolute;
-      right: 0;
-      top: 0;
-      height: 100%;
+    .logo {
       display: flex;
       align-items: center;
-      padding: 0 0.75rem;
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      color: var(--muted-foreground);
-    }
-
-    .error-message {
-      color: var(--error);
-      font-size: 0.75rem;
-      margin-top: 0.25rem;
-      display: none;
-    }
-
-    .error-message.visible {
-      display: block;
-    }
-
-    .checkbox-container {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin: 1rem 0;
-    }
-
-    .checkbox {
-      width: 1rem;
-      height: 1rem;
-      border-radius: 0.25rem;
-      border: 1px solid var(--input);
-      appearance: none;
-      -webkit-appearance: none;
-      cursor: pointer;
-      position: relative;
-    }
-
-    .checkbox:checked {
-      background-color: var(--primary);
-      border-color: var(--primary);
-    }
-
-    .checkbox:checked::after {
-      content: '';
-      position: absolute;
-      left: 5px;
-      top: 2px;
-      width: 3px;
-      height: 6px;
-      border: solid white;
-      border-width: 0 2px 2px 0;
-      transform: rotate(45deg);
-    }
-
-    .checkbox-label {
-      font-size: 0.875rem;
-      font-weight: 400;
+      font-weight: 700;
+      font-size: 1.25rem;
       color: var(--foreground);
-    }
-
-    .forgot-password {
-      font-size: 0.75rem;
-      color: var(--primary);
       text-decoration: none;
     }
 
-    .forgot-password:hover {
-      text-decoration: underline;
+    .logo-icon {
+      width: 24px;
+      height: 24px;
+      margin-right: 0.5rem;
+      color: var(--primary);
     }
 
-    .card-footer {
-      padding: 1.5rem;
+    .nav {
       display: flex;
-      flex-direction: column;
       gap: 1rem;
+    }
+
+    .nav-link {
+      color: var(--muted-foreground);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      padding: 0.5rem;
+      border-radius: 0.375rem;
+      transition: color 0.2s, background-color 0.2s;
+    }
+
+    .nav-link:hover {
+      color: var(--foreground);
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .nav-link:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+    }
+
+    .nav-link.active {
+      color: var(--primary);
     }
 
     .btn {
@@ -293,6 +128,7 @@
       transition: background-color 0.2s, color 0.2s, border-color 0.2s;
       height: 2.5rem;
       border: none;
+      text-decoration: none;
     }
 
     .btn-primary {
@@ -302,11 +138,6 @@
 
     .btn-primary:hover {
       background-color: var(--primary-dark);
-    }
-
-    .btn-primary:disabled {
-      opacity: 0.7;
-      cursor: not-allowed;
     }
 
     .btn-outline {
@@ -325,51 +156,371 @@
       }
     }
 
-    .btn-link {
-      background: none;
-      border: none;
-      color: var(--primary);
-      padding: 0;
-      font-size: 0.875rem;
-      height: auto;
-      text-decoration: none;
+    .auth-buttons {
+      display: flex;
+      gap: 0.5rem;
     }
 
-    .btn-link:hover {
-      text-decoration: underline;
-    }
-
-    .divider {
-      position: relative;
-      width: 100%;
-      margin: 0.5rem 0;
+    .hero {
+      padding: 4rem 0;
       text-align: center;
     }
 
-    .divider::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 0;
-      right: 0;
-      height: 1px;
-      background-color: var(--border);
+    .hero-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      background: linear-gradient(to right, var(--primary), #6d28d9);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-fill-color: transparent;
     }
 
-    .divider-text {
-      position: relative;
-      display: inline-block;
-      padding: 0 0.5rem;
-      background-color: var(--card);
+    .hero-description {
+      font-size: 1.125rem;
       color: var(--muted-foreground);
-      font-size: 0.75rem;
-      text-transform: uppercase;
+      max-width: 600px;
+      margin: 0 auto 2rem auto;
+      line-height: 1.6;
     }
 
-    .icon {
-      width: 1rem;
-      height: 1rem;
-      margin-right: 0.5rem;
+    .hero-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-bottom: 3rem;
+    }
+
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+
+    .tab {
+      padding: 1rem 1.5rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--muted-foreground);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .tab:hover {
+      color: var(--foreground);
+    }
+
+    .tab.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .card {
+      background-color: var(--card);
+      color: var(--card-foreground);
+      border-radius: 0.75rem;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      margin-bottom: 2rem;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .card {
+        background-color: rgba(30, 41, 59, 0.5);
+      }
+    }
+
+    .card-content {
+      padding: 1.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.875rem;
+      border: 1px solid var(--input);
+      border-radius: 0.375rem;
+      background-color: transparent;
+      color: var(--foreground);
+      transition: border-color 0.2s, box-shadow 0.2s;
+      font-family: inherit;
+    }
+
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: var(--ring);
+      box-shadow: 0 0 0 2px rgba(0, 112, 243, 0.25);
+    }
+
+    .card-footer {
+      padding: 1.5rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .features {
+      padding: 4rem 0;
+    }
+
+    .section-title {
+      font-size: 1.875rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .section-description {
+      font-size: 1rem;
+      color: var(--muted-foreground);
+      max-width: 600px;
+      margin: 0 auto 3rem auto;
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+
+    .feature-card {
+      padding: 1.5rem;
+      border-radius: 0.75rem;
+      background-color: var(--card);
+      border: 1px solid var(--border);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      background-color: rgba(0, 112, 243, 0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+      margin-bottom: 1rem;
+    }
+
+    .feature-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .feature-description {
+      font-size: 0.875rem;
+      color: var(--muted-foreground);
+      line-height: 1.6;
+    }
+
+    .cta {
+      padding: 4rem 0;
+      text-align: center;
+    }
+
+    .cta-card {
+      padding: 3rem;
+      border-radius: 0.75rem;
+      background: linear-gradient(to right, var(--primary-light), var(--primary-dark));
+      color: white;
+      margin-bottom: 4rem;
+    }
+
+    .cta-title {
+      font-size: 1.875rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .cta-description {
+      font-size: 1rem;
+      max-width: 600px;
+      margin: 0 auto 2rem auto;
+      opacity: 0.9;
+      line-height: 1.6;
+    }
+
+    .cta-btn {
+      background-color: white;
+      color: var(--primary);
+      padding: 0.75rem 1.5rem;
+      font-weight: 600;
+    }
+
+    .cta-btn:hover {
+      background-color: rgba(255, 255, 255, 0.9);
+    }
+
+    .footer {
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+
+    .footer-text {
+      font-size: 0.875rem;
+      color: var(--muted-foreground);
+    }
+
+    .result-container {
+      display: none;
+      margin-top: 1rem;
+      padding: 1rem;
+      border-radius: 0.375rem;
+      background-color: rgba(16, 185, 129, 0.1);
+      border: 1px solid var(--success);
+    }
+
+    .result-title {
+      font-weight: 600;
+      font-size: 0.875rem;
+      margin-bottom: 0.5rem;
+      color: var(--success);
+    }
+
+    .encrypted-text, .decrypted-text {
+      font-family: monospace;
+      word-break: break-all;
+      padding: 0.75rem;
+      background-color: rgba(0, 0, 0, 0.05);
+      border-radius: 0.25rem;
+      margin-bottom: 0.75rem;
+      font-size: 0.875rem;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .encrypted-text, .decrypted-text {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+    }
+
+    .result-note {
+      font-size: 0.75rem;
+      color: var(--muted-foreground);
+    }
+
+    .copy-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background-color: transparent;
+      border: 1px solid var(--border);
+      color: var(--foreground);
+      border-radius: 0.25rem;
+      padding: 0.25rem 0.5rem;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      margin-top: 0.5rem;
+    }
+
+    .copy-btn:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .copy-btn:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+    }
+
+    .copy-icon {
+      width: 0.75rem;
+      height: 0.75rem;
+      margin-right: 0.25rem;
+    }
+
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--foreground);
+      cursor: pointer;
+      padding: 0.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .mobile-menu-btn {
+        display: block;
+      }
+
+      .nav, .auth-buttons {
+        display: none;
+      }
+
+      .nav.active {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 70px;
+        left: 0;
+        right: 0;
+        background-color: var(--card);
+        padding: 1rem;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        z-index: 10;
+      }
+
+      .auth-buttons.active {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        gap: 0.5rem;
+        margin-top: 1rem;
+      }
+
+      .hero-title {
+        font-size: 2rem;
+      }
+
+      .hero-buttons {
+        flex-direction: column;
+      }
+
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .cta-card {
+        padding: 2rem 1rem;
+      }
     }
 
     .spinner {
@@ -385,98 +536,343 @@
       }
     }
 
-    .signup-text {
-      text-align: center;
-      font-size: 0.875rem;
-      color: var(--muted-foreground);
+    .icon {
+      width: 1rem;
+      height: 1rem;
+      margin-right: 0.5rem;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="card">
-      <div class="card-header">
-        <div class="logo-container">
-          <div class="logo">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-            </svg>
-          </div>
-        </div>
-        <h1 class="card-title">Welcome back</h1>
-        <p class="card-description">Enter your credentials to sign in to your account</p>
-      </div>
-
-      <div class="tabs">
-      </div>
-
-      <div id="email-tab" class="tab-content active">
-        <form id="login-form">
-          <div class="card-content">
-            <div class="form-group">
-              <label for="email">Email</label>
-              <input type="email" id="email" placeholder="name@example.com">
-              <p id="email-error" class="error-message">Please enter a valid email</p>
-            </div>
-
-            <div class="form-group">
-              <div class="form-group-flex">
-                <label for="password">Password</label>
-                <a href="#" class="forgot-password">Forgot password?</a>
-              </div>
-              <div class="input-wrapper">
-                <input type="password" id="password" class="password-input" placeholder="••••••••">
-                <button type="button" class="toggle-password" aria-label="Toggle password visibility">
-                  <svg id="eye-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: block;">
-                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                    <circle cx="12" cy="12" r="3"></circle>
-                  </svg>
-                  <svg id="eye-off-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
-                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
-                    <line x1="1" y1="1" x2="23" y2="23"></line>
-                  </svg>
-                </button>
-              </div>
-              <p id="password-error" class="error-message">Password must be at least 6 characters</p>
-            </div>
-
-            <div class="checkbox-container">
-              <input type="checkbox" id="remember" class="checkbox">
-              <label for="remember" class="checkbox-label">Remember me for 30 days</label>
-            </div>
-          </div>
-
-          <div class="card-footer">
-            <button type="submit" id="submit-btn" class="btn btn-primary">Sign in</button>
-            
+  <header class="header">
+    <div class="container">
+      <div class="header-content" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+        <a href="#" class="logo">
+          <svg class="logo-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+          SecureMessage
+        </a>
         
-            
-            <p class="signup-text">
-              Don't have an account?
-              <button type="button" class="btn-link">Sign up</button>
-              <script type="text/javascript">
-              document.getElementById("myButton").onclick = function () {
-              location.href = "https://encryption2025.vercel.app/singup.html";
-    };
-</script>
-            </p>
-          </div>
-        </form>
-      </div>
-
-      <div id="sso-tab" class="tab-content">
-        <div class="card-content">
-          <div class="form-group">
-            <label for="sso-email">Email</label>
-            <input type="email" id="sso-email" placeholder="name@company.com">
-          </div>
-        </div>
-        <div class="card-footer">
-          <button type="button" class="btn btn-primary">Make a New Account</button>
+        <button class="mobile-menu-btn">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+        
+        <nav class="nav">
+          <a href="#" class="nav-link active">Home</a>
+          <a href="#features" class="nav-link">Features</a>
+          <a href="#how-it-works" class="nav-link">How it Works</a>
+          <a href="#" class="nav-link">About</a>
+        </nav>
+        
+        <div class="auth-buttons">
+          <a href="login.html" class="btn btn-outline">Log in</a>
+          <a href="signup.html" class="btn btn-primary">Sign up</a>
         </div>
       </div>
     </div>
-  </div>
+  </header>
+
+  <section class="hero">
+    <div class="container">
+      <h1 class="hero-title">Secure Your Messages with Confidence</h1>
+      <p class="hero-description">
+        SecureMessage provides end-to-end encryption for your sensitive communications. 
+        Only your intended recipients can decrypt and read your messages.
+      </p>
+      <div class="hero-buttons">
+        <a href="#encrypt-decrypt" class="btn btn-primary">Get Started</a>
+        <a href="#features" class="btn btn-outline">Learn More</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="encrypt-decrypt" class="encrypt-decrypt">
+    <div class="container">
+      <div class="tabs">
+        <div class="tab active" data-tab="encrypt">Encrypt</div>
+        <div class="tab" data-tab="decrypt">Decrypt</div>
+      </div>
+      
+      <div id="encrypt-tab" class="tab-content active">
+        <div class="card">
+          <form id="encrypt-form">
+            <div class="card-content">
+              <div class="form-group">
+                <label for="recipient">Recipient Username</label>
+                <input type="text" id="recipient" placeholder="Enter recipient's username">
+              </div>
+
+              <div class="form-group">
+                <label for="message">Message to Encrypt</label>
+                <textarea id="message" placeholder="Enter the message you want to encrypt"></textarea>
+              </div>
+
+              <div id="encrypt-result" class="result-container">
+                <p class="result-title">Encrypted Message</p>
+                <div id="encrypted-text" class="encrypted-text"></div>
+                <button type="button" id="encrypt-copy-btn" class="copy-btn">
+                  <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                  </svg>
+                  Copy to clipboard
+                </button>
+                <p class="result-note">Only <span id="recipient-name"></span> will be able to decrypt this message.</p>
+              </div>
+            </div>
+
+            <div class="card-footer">
+              <button type="submit" id="encrypt-btn" class="btn btn-primary">Encrypt Message</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      
+      <div id="decrypt-tab" class="tab-content">
+        <div class="card">
+          <form id="decrypt-form">
+            <div class="card-content">
+              <div class="form-group">
+                <label for="encrypted-code">Encrypted Code</label>
+                <textarea id="encrypted-code" placeholder="Paste the encrypted code here"></textarea>
+              </div>
+
+              <div id="decrypt-result" class="result-container">
+                <p class="result-title">Decrypted Message</p>
+                <div id="decrypted-text" class="decrypted-text"></div>
+                <button type="button" id="decrypt-copy-btn" class="copy-btn">
+                  <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                  </svg>
+                  Copy to clipboard
+                </button>
+                <p class="result-note">This message was successfully decrypted.</p>
+              </div>
+            </div>
+
+            <div class="card-footer">
+              <button type="submit" id="decrypt-btn" class="btn btn-primary">Decrypt Message</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="features" class="features">
+    <div class="container">
+      <h2 class="section-title">Why Choose SecureMessage</h2>
+      <p class="section-description">
+        Our platform offers state-of-the-art encryption technology to keep your communications private and secure.
+      </p>
+      
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+          </div>
+          <h3 class="feature-title">End-to-End Encryption</h3>
+          <p class="feature-description">
+            Your messages are encrypted on your device and can only be decrypted by the intended recipient, ensuring complete privacy.
+          </p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+          </div>
+          <h3 class="feature-title">Military-Grade Security</h3>
+          <p class="feature-description">
+            We use advanced encryption algorithms that meet the highest security standards to protect your sensitive information.
+          </p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
+              <path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
+            </svg>
+          </div>
+          <h3 class="feature-title">No Message Storage</h3>
+          <p class="feature-description">
+            We don't store your messages on our servers. Once encrypted, messages exist only where you share them.
+          </p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M12 8v4"></path>
+              <path d="M12 16h.01"></path>
+            </svg>
+          </div>
+          <h3 class="feature-title">Easy to Use</h3>
+          <p class="feature-description">
+            Our intuitive interface makes it simple to encrypt and decrypt messages without any technical knowledge.
+          </p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+          </div>
+          <h3 class="feature-title">Recipient Verification</h3>
+          <p class="feature-description">
+            Ensure your message reaches only the intended recipient with our user verification system.
+          </p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2v4"></path>
+              <path d="M12 18v4"></path>
+              <path d="M4.93 4.93l2.83 2.83"></path>
+              <path d="M16.24 16.24l2.83 2.83"></path>
+              <path d="M2 12h4"></path>
+              <path d="M18 12h4"></path>
+              <path d="M4.93 19.07l2.83-2.83"></path>
+              <path d="M16.24 7.76l2.83-2.83"></path>
+            </svg>
+          </div>
+          <h3 class="feature-title">Cross-Platform</h3>
+          <p class="feature-description">
+            Access SecureMessage from any device with a web browser, no downloads or installations required.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="how-it-works" class="features">
+    <div class="container">
+      <h2 class="section-title">How It Works</h2>
+      <p class="section-description">
+        SecureMessage uses advanced encryption techniques to protect your communications. Here's how the process works:
+      </p>
+      
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+              <line x1="9" y1="9" x2="9.01" y2="9"></line>
+              <line x1="15" y1="9" x2="15.01" y2="9"></line>
+            </svg>
+          </div>
+          <h3 class="feature-title">1. Create an Account</h3>
+          <p class="feature-description">
+            Sign up for a free account to start encrypting and decrypting messages securely.
+          </p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+            </svg>
+          </div>
+          <h3 class="feature-title">2. Compose Your Message</h3>
+          <p class="feature-description">
+            Write your message and specify the recipient's username who will be able to decrypt it.
+          </p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+          </div>
+          <h3 class="feature-title">3. Encrypt</h3>
+          <p class="feature-description">
+            Click the encrypt button to convert your message into a secure, encrypted code that only your recipient can read.
+          </p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+              <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+            </svg>
+          </div>
+          <h3 class="feature-title">4. Share</h3>
+          <p class="feature-description">
+            Copy the encrypted message and share it with your recipient through any communication channel.
+          </p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              <line x1="12" y1="15" x2="12" y2="17"></line>
+            </svg>
+          </div>
+          <h3 class="feature-title">5. Decrypt</h3>
+          <p class="feature-description">
+            The recipient pastes the encrypted message into the decrypt tool to reveal the original message.
+          </p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+              <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+          </div>
+          <h3 class="feature-title">6. Secure Communication</h3>
+          <p class="feature-description">
+            Enjoy the peace of mind that comes with knowing your sensitive information is protected.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta">
+    <div class="container">
+      <div class="cta-card">
+        <h2 class="cta-title">Ready to Secure Your Communications?</h2>
+        <p class="cta-description">
+          Join thousands of users who trust SecureMessage for their sensitive communications. 
+          Sign up today and start protecting your messages with military-grade encryption.
+        </p>
+        <a href="signup.html" class="btn cta-btn">Create Free Account</a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <p class="footer-text">© 2025 SecureMessage. All rights reserved.</p>
+    </div>
+  </footer>
 
   <script>
     // Tab switching
@@ -497,110 +893,187 @@
       });
     });
 
-    // Password visibility toggle
-    const passwordInput = document.getElementById('password');
-    const togglePasswordBtn = document.querySelector('.toggle-password');
-    const eyeIcon = document.getElementById('eye-icon');
-    const eyeOffIcon = document.getElementById('eye-off-icon');
+    // Mobile menu toggle
+    const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+    const nav = document.querySelector('.nav');
+    const authButtons = document.querySelector('.auth-buttons');
 
-    togglePasswordBtn.addEventListener('click', () => {
-      if (passwordInput.type === 'password') {
-        passwordInput.type = 'text';
-        eyeIcon.style.display = 'none';
-        eyeOffIcon.style.display = 'block';
-      } else {
-        passwordInput.type = 'password';
-        eyeIcon.style.display = 'block';
-        eyeOffIcon.style.display = 'none';
-      }
+    mobileMenuBtn.addEventListener('click', () => {
+      nav.classList.toggle('active');
+      authButtons.classList.toggle('active');
     });
 
-    // Form validation
-    const loginForm = document.getElementById('login-form');
-    const emailInput = document.getElementById('email');
-    const emailError = document.getElementById('email-error');
-    const passwordError = document.getElementById('password-error');
-    const submitBtn = document.getElementById('submit-btn');
+    // Encrypt form
+    const encryptForm = document.getElementById('encrypt-form');
+    const recipientInput = document.getElementById('recipient');
+    const messageInput = document.getElementById('message');
+    const encryptBtn = document.getElementById('encrypt-btn');
+    const encryptResult = document.getElementById('encrypt-result');
+    const encryptedText = document.getElementById('encrypted-text');
+    const recipientName = document.getElementById('recipient-name');
+    const encryptCopyBtn = document.getElementById('encrypt-copy-btn');
     
-    const validateEmail = (email) => {
-      const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!email) {
-        emailError.textContent = 'Email is required';
-        emailError.classList.add('visible');
-        emailInput.classList.add('error');
-        return false;
-      } else if (!re.test(email)) {
-        emailError.textContent = 'Please enter a valid email';
-        emailError.classList.add('visible');
-        emailInput.classList.add('error');
-        return false;
+    // Generate random encrypted string (20-40 characters)
+    const generateEncryptedString = (length) => {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      let result = '';
+      for (let i = 0; i < length; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
       }
-      emailError.classList.remove('visible');
-      emailInput.classList.remove('error');
-      return true;
+      return result;
     };
     
-    const validatePassword = (password) => {
-      if (!password) {
-        passwordError.textContent = 'Password is required';
-        passwordError.classList.add('visible');
-        passwordInput.classList.add('error');
-        return false;
-      } else if (password.length < 6) {
-        passwordError.textContent = 'Password must be at least 6 characters';
-        passwordError.classList.add('visible');
-        passwordInput.classList.add('error');
-        return false;
-      }
-      passwordError.classList.remove('visible');
-      passwordInput.classList.remove('error');
-      return true;
-    };
-    
-    emailInput.addEventListener('blur', () => {
-      validateEmail(emailInput.value);
-    });
-    
-    passwordInput.addEventListener('blur', () => {
-      validatePassword(passwordInput.value);
-    });
-    
-    loginForm.addEventListener('submit', (e) => {
+    encryptForm.addEventListener('submit', (e) => {
       e.preventDefault();
       
-      const isEmailValid = validateEmail(emailInput.value);
-      const isPasswordValid = validatePassword(passwordInput.value);
+      const recipient = recipientInput.value;
+      const message = messageInput.value;
       
-      if (!isEmailValid || !isPasswordValid) {
+      if (!recipient.trim() || !message.trim()) {
+        alert('Please fill in all fields');
         return;
       }
       
       // Show loading state
-      const originalText = submitBtn.textContent;
-      submitBtn.disabled = true;
-      submitBtn.innerHTML = `
+      const originalText = encryptBtn.textContent;
+      encryptBtn.disabled = true;
+      encryptBtn.innerHTML = `
         <svg class="icon spinner" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
         </svg>
-        Signing in...
+        Encrypting...
       `;
       
-      // Simulate API call
+      // Simulate encryption process
       setTimeout(() => {
-        console.log('Login successful', { 
-          email: emailInput.value, 
-          password: passwordInput.value,
-          remember: document.getElementById('remember').checked
-        });
+        // Generate random length between 20-40
+        const length = Math.floor(Math.random() * 21) + 20;
+        const encrypted = generateEncryptedString(length);
+        
+        // Display the result
+        encryptedText.textContent = encrypted;
+        recipientName.textContent = recipient;
+        encryptResult.style.display = 'block';
         
         // Reset form state
-        submitBtn.disabled = false;
-        submitBtn.textContent = originalText;
+        encryptBtn.disabled = false;
+        encryptBtn.textContent = originalText;
         
-        // You would typically redirect here after successful login
-        // window.location.href = '/dashboard';
+        // Scroll to result
+        encryptResult.scrollIntoView({ behavior: 'smooth' });
+      }, 1000);
+    });
+    
+    // Copy to clipboard functionality for encrypt
+    encryptCopyBtn.addEventListener('click', () => {
+      const textToCopy = encryptedText.textContent;
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        const originalText = encryptCopyBtn.innerHTML;
+        encryptCopyBtn.innerHTML = `
+          <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          Copied!
+        `;
+        
+        setTimeout(() => {
+          encryptCopyBtn.innerHTML = originalText;
+        }, 2000);
+      });
+    });
+
+    // Decrypt form
+    const decryptForm = document.getElementById('decrypt-form');
+    const encryptedCodeInput = document.getElementById('encrypted-code');
+    const decryptBtn = document.getElementById('decrypt-btn');
+    const decryptResult = document.getElementById('decrypt-result');
+    const decryptedText = document.getElementById('decrypted-text');
+    const decryptCopyBtn = document.getElementById('decrypt-copy-btn');
+    
+    // Sample decryption messages for demo purposes
+    const sampleMessages = [
+      "This is a confidential message that has been decrypted successfully.",
+      "Your meeting is scheduled for tomorrow at 2:00 PM in the conference room.",
+      "The password for the shared account is: SecureP@ssw0rd123",
+      "Please review the attached document before the deadline on Friday.",
+      "Your verification code is 847291. Do not share this with anyone.",
+      "Congratulations! Your application has been approved.",
+      "The project deadline has been extended to next Tuesday."
+    ];
+    
+    decryptForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const encryptedCode = encryptedCodeInput.value;
+      
+      if (!encryptedCode.trim()) {
+        alert('Please enter an encrypted code');
+        return;
+      }
+      
+      // Show loading state
+      const originalText = decryptBtn.textContent;
+      decryptBtn.disabled = true;
+      decryptBtn.innerHTML = `
+        <svg class="icon spinner" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
+        </svg>
+        Decrypting...
+      `;
+      
+      // Simulate decryption process
+      setTimeout(() => {
+        // For demo purposes, select a random message
+        const randomIndex = Math.floor(Math.random() * sampleMessages.length);
+        const decrypted = sampleMessages[randomIndex];
+        
+        // Display the result
+        decryptedText.textContent = decrypted;
+        decryptResult.style.display = 'block';
+        
+        // Reset form state
+        decryptBtn.disabled = false;
+        decryptBtn.textContent = originalText;
+        
+        // Scroll to result
+        decryptResult.scrollIntoView({ behavior: 'smooth' });
       }, 1500);
+    });
+    
+    // Copy to clipboard functionality for decrypt
+    decryptCopyBtn.addEventListener('click', () => {
+      const textToCopy = decryptedText.textContent;
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        const originalText = decryptCopyBtn.innerHTML;
+        decryptCopyBtn.innerHTML = `
+          <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          Copied!
+        `;
+        
+        setTimeout(() => {
+          decryptCopyBtn.innerHTML = originalText;
+        }, 2000);
+      });
+    });
+
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        
+        const targetId = this.getAttribute('href');
+        if (targetId === '#') return;
+        
+        const targetElement = document.querySelector(targetId);
+        if (targetElement) {
+          targetElement.scrollIntoView({
+            behavior: 'smooth'
+          });
+        }
+      });
     });
   </script>
 </body>
-</html>
+</html>c
