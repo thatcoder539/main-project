@@ -383,7 +383,9 @@
 
       <div class="tabs">
         <button class="tab active" data-tab="encrypt">Encrypt</button>
-        <div>
+        <button class="tab" data-tab="decrypt">Decrypt</button>
+      </div>
+
       <div id="encrypt-tab" class="tab-content active">
         <form id="encrypt-form">
           <div class="card-content">
@@ -419,7 +421,25 @@
         </form>
       </div>
 
-     
+      <div id="decrypt-tab" class="tab-content">
+        <div class="card-content">
+          <div class="form-group">
+            <label for="username">Your Username</label>
+            <input type="text" id="username" placeholder="Enter your username">
+          </div>
+          <div class="form-group">
+            <label for="encrypted-message">Encrypted Message</label>
+            <textarea id="encrypted-message" placeholder="Paste the encrypted message here"></textarea>
+          </div>
+        </div>
+        <div class="card-footer">
+          <button type="button" class="btn btn-primary">Decrypt Message</button>
+          <p class="card-description">This is a placeholder. In a real application, proper decryption would be implemented.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script>
     // Tab switching
     const tabs = document.querySelectorAll('.tab');
