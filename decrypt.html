@@ -1,1 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Decrypt Message</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <style>
+    :root {
+      --primary: #0070f3;
+      --primary-light: #3291ff;
+      --primary-dark: #0050b3;
+      --background: #ffffff;
+      --foreground: #000000;
+      --card: #ffffff;
+      --card-foreground: #000000;
+      --border: #e2e8f0;
+      --input: #e2e8f0;
+      --ring: #0070f3;
+      --muted: #64748b;
+      --muted-foreground: #64748b;
+      --error: #ef4444;
+      --success: #10b981;
+    }
 
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --background: #0f172a;
+        --foreground: #f8fafc;
+        --card: #1e293b;
+        --card-foreground: #f8fafc;
+        --border: #334155;
+        --input: #334155;
+        --muted: #94a3b8;
+        --muted-foreground: #94a3b8;
+      }
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      background: linear-gradient(to bottom right, #f8fafc, #e2e8f0);
+      color: var(--foreground);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      body {
+        background: linear-gradient(to bottom right, #0f172a, #1e293b);
+      }
+    }
+
+    .container {
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .card {
+      background-color: var(--card);
+      color: var(--card-foreground);
+      border-radius: 0.75rem;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .card {
+        background-color: rgba(30, 41, 59, 0.5);
+      }
+    }
+
+    .card-header {
+      padding: 1.5rem 1.5rem 1rem 1.5rem;
+      text-align: center;
+    }
+
+    .logo-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 1rem;
+    }
+
+    .logo {
+      width: 48px;
+      height: 48px;
+      background-color: rgba(0, 112, 243, 0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+    }
+
+    .card-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .card-description {
+      color: var(--muted-foreground);
+      font-size: 0.875rem;
+      margin-bottom: 1rem;
+    }
+
+    .card-content {
+      padding: 0 1.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+
+    textarea {
+      width: 100%;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.875rem;
+      border: 1px solid var(--input);
+      border-radius: 0.375rem;
+      background-color: transparent;
+      color: var(--foreground);
+      transition: border-color 0.2s, box-shadow 0.2s;
+      font-family: inherit;
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: var(--ring);
+      box-shadow: 0 0 0 2px rgba(0, 112, 243, 0.25);
+    }
+
+    textarea.error {
+      border-color: var(--error);
+    }
+
+    textarea.error:focus {
+      box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.25);
+    }
+
+    .error-message {
+      color: var(--error);
+      font-size: 0.75rem;
+      margin-top: 0.25rem;
+      display: none;
+    }
+
+    .error-message.visible {
+      display: block;
+    }
+
+    .card-footer {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 0.375rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+      height: 2.5rem;
+      border: none;
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-dark);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    .btn-outline {
+      background-color: transparent;
+      border: 1px solid var(--border);
+      color: var(--foreground);
+    }
+
+    .btn-outline:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .btn-outline:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+    }
+
+    .icon {
+      width: 1rem;
+      height: 1rem;
+      margin-right: 0.5rem;
+    }
+
+    .spinner {
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .result-container {
+      display: none;
+      margin-top: 1rem;
+      padding: 1rem;
+      border-radius: 0.375rem;
+      background-color: rgba(16, 185, 129, 0.1);
+      border: 1px solid var(--success);
+    }
+
+    .result-title {
+      font-weight: 600;
+      font-size: 0.875rem;
+      margin-bottom: 0.5rem;
+      color: var(--success);
+    }
+
+    .decrypted-text {
+      word-break: break-word;
+      padding: 0.75rem;
+      background-color: rgba(0, 0, 0, 0.05);
+      border-radius: 0.25rem;
+      margin-bottom: 0.75rem;
+      font-size: 0.875rem;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .decrypted-text {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+    }
+
+    .result-note {
+      font-size: 0.75rem;
+      color: var(--muted-foreground);
+    }
+
+    .copy-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background-color: transparent;
+      border: 1px solid var(--border);
+      color: var(--foreground);
+      border-radius: 0.25rem;
+      padding: 0.25rem 0.5rem;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      margin-top: 0.5rem;
+    }
+
+    .copy-btn:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .copy-btn:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+    }
+
+    .copy-icon {
+      width: 0.75rem;
+      height: 0.75rem;
+      margin-right: 0.25rem;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      font-size: 0.875rem;
+      color: var(--muted-foreground);
+      text-decoration: none;
+      margin-top: 1rem;
+    }
+
+    .back-link:hover {
+      color: var(--foreground);
+    }
+
+    .back-icon {
+      width: 0.875rem;
+      height: 0.875rem;
+      margin-right: 0.25rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <div class="card-header">
+        <div class="logo-container">
+          <div class="logo">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              <line x1="12" y1="15" x2="12" y2="17"></line>
+            </svg>
+          </div>
+        </div>
+        <h1 class="card-title">Decrypt Message</h1>
+        <p class="card-description">Enter the encrypted code to view the original message</p>
+      </div>
+
+      <form id="decrypt-form">
+        <div class="card-content">
+          <div class="form-group">
+            <label for="encrypted-code">Encrypted Code</label>
+            <textarea id="encrypted-code" placeholder="Paste the encrypted code here"></textarea>
+            <p id="code-error" class="error-message">Please enter a valid encrypted code</p>
+          </div>
+
+          <div id="result-container" class="result-container">
+            <p class="result-title">Decrypted Message</p>
+            <div id="decrypted-text" class="decrypted-text"></div>
+            <button type="button" id="copy-btn" class="copy-btn">
+              <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+              Copy to clipboard
+            </button>
+            <p class="result-note">This message was successfully decrypted.</p>
+          </div>
+        </div>
+
+        <div class="card-footer">
+          <button type="submit" id="submit-btn" class="btn btn-primary">Decrypt Message</button>
+          <a href="#" class="back-link">
+            <svg class="back-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Back to encryption
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Form validation and decryption
+    const decryptForm = document.getElementById('decrypt-form');
+    const encryptedCodeInput = document.getElementById('encrypted-code');
+    const codeError = document.getElementById('code-error');
+    const submitBtn = document.getElementById('submit-btn');
+    const resultContainer = document.getElementById('result-container');
+    const decryptedText = document.getElementById('decrypted-text');
+    const copyBtn = document.getElementById('copy-btn');
+    
+    const validateEncryptedCode = (code) => {
+      if (!code.trim()) {
+        codeError.textContent = 'Please enter an encrypted code';
+        codeError.classList.add('visible');
+        encryptedCodeInput.classList.add('error');
+        return false;
+      }
+      
+      // Simple validation - check if it looks like our encrypted format
+      // In a real app, you'd have more sophisticated validation
+      if (code.trim().length < 20) {
+        codeError.textContent = 'Invalid encrypted code format';
+        codeError.classList.add('visible');
+        encryptedCodeInput.classList.add('error');
+        return false;
+      }
+      
+      codeError.classList.remove('visible');
+      encryptedCodeInput.classList.remove('error');
+      return true;
+    };
+    
+    encryptedCodeInput.addEventListener('blur', () => {
+      validateEncryptedCode(encryptedCodeInput.value);
+    });
+    
+    // Sample decryption messages for demo purposes
+    const sampleMessages = [
+      "This is a confidential message that has been decrypted successfully.",
+      "Your meeting is scheduled for tomorrow at 2:00 PM in the conference room.",
+      "The password for the shared account is: SecureP@ssw0rd123",
+      "Please review the attached document before the deadline on Friday.",
+      "Your verification code is 847291. Do not share this with anyone.",
+      "Congratulations! Your application has been approved.",
+      "The project deadline has been extended to next Tuesday."
+    ];
+    
+    decryptForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const encryptedCode = encryptedCodeInput.value;
+      
+      const isCodeValid = validateEncryptedCode(encryptedCode);
+      
+      if (!isCodeValid) {
+        return;
+      }
+      
+      // Show loading state
+      const originalText = submitBtn.textContent;
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = `
+        <svg class="icon spinner" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
+        </svg>
+        Decrypting...
+      `;
+      
+      // Simulate decryption process
+      setTimeout(() => {
+        // For demo purposes, select a random message
+        const randomIndex = Math.floor(Math.random() * sampleMessages.length);
+        const decrypted = sampleMessages[randomIndex];
+        
+        // Display the result
+        decryptedText.textContent = decrypted;
+        resultContainer.style.display = 'block';
+        
+        // Reset form state
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+        
+        // Scroll to result
+        resultContainer.scrollIntoView({ behavior: 'smooth' });
+      }, 1500);
+    });
+    
+    // Copy to clipboard functionality
+    copyBtn.addEventListener('click', () => {
+      const textToCopy = decryptedText.textContent;
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        const originalText = copyBtn.innerHTML;
+        copyBtn.innerHTML = `
+          <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          Copied!
+        `;
+        
+        setTimeout(() => {
+          copyBtn.innerHTML = originalText;
+        }, 2000);
+      });
+    });
+  </script>
+</body>
+</html>
