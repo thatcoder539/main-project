@@ -511,12 +511,12 @@
     const validateEmail = (email) => {
       const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!email) {
-        emailError.textContent = 'Email is required';
+        emailError.textContent = 'Username is required';
         emailError.classList.add('visible');
         emailInput.classList.add('error');
         return false;
       } else if (!re.test(email)) {
-        emailError.textContent = 'Please enter a valid email';
+        emailError.textContent = 'Please enter a valid username';
         emailError.classList.add('visible');
         emailInput.classList.add('error');
         return false;
